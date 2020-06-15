@@ -1,0 +1,202 @@
+\documentclass[12pt,a4paper]{article}  % Khai báo lớp văn bản
+\usepackage[utf8]{vietnam} % Gói lệnh phông tiếng Việt
+\usepackage{a4wide,amssymb,epsfig,latexsym,multicol,array,hhline,fancyhdr}
+
+\usepackage{amsmath}
+\usepackage{lastpage}
+\usepackage[lined,boxed,commentsnumbered]{algorithm2e}
+\usepackage{enumerate}
+\usepackage{color}
+\usepackage{graphicx}							
+% Standard graphics package
+\usepackage{array}
+\usepackage{tabularx, caption}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{rotating}
+\usepackage{graphics}
+\usepackage[a4paper,left=2cm,right=2cm,top=1.8cm,bottom=2.8cm]{geometry}
+\usepackage{setspace}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usetikzlibrary{arrows,snakes,backgrounds}
+\usepackage{csquotes}% chèn trích dẫn câu nói
+	\DeclareQuoteStyle[american]{english}
+	{\itshape\textquotedblleft}
+	[\textquotedblleft]
+	{\textquotedblright}
+	[0.05em]
+	{\textquoteleft}
+	{\textquoteright}	
+\usepackage[unicode]{hyperref}
+	\hypersetup{urlcolor=blue,linkcolor=black,citecolor=black,colorlinks=true} 
+	%\usepackage{pstcol} 								
+	% PSTricks with the standard color package
+	
+	\newtheorem{theorem}{{\bf Theorem}}
+	\newtheorem{property}{{\bf Property}}
+	\newtheorem{proposition}{{\bf Proposition}}
+	\newtheorem{corollary}[proposition]{{\bf Corollary}}
+	\newtheorem{lemma}[proposition]{{\bf Lemma}}
+\setlength{\headheight}{40pt}
+\pagestyle{fancy}
+%Tiêu đề phía trên
+\fancyhead{} % clear all header fields
+\fancyhead[L]{
+	\begin{tabular}{rl}
+		\begin{picture}(25,15)(0,0)
+		\put(0,-8){\includegraphics[width=8mm, height=8mm]{hcmut.png}}
+		%\put(0,-8){\epsfig{width=10mm,figure=hcmut.eps}}
+	   \end{picture}&
+		%\includegraphics[width=8mm, height=8mm]{hcmut.png} & %
+		\begin{tabular}{l}
+			\textbf{\bf \ttfamily Trường Đại học Bách Khoa, ĐHQG TP.Hồ Chí Minh}\\
+			\textbf{\bf \ttfamily Khoa Khoa học \& Kĩ thuật Máy tính}
+		\end{tabular} 	
+	 \end{tabular}
+	}
+	\fancyhead[R]{
+		\begin{tabular}{l}
+			\tiny \bf \\
+			\tiny \bf 
+		\end{tabular}  }
+	\fancyfoot{} % clear all footer fields
+	\fancyfoot[L]{\scriptsize \ttfamily Assignment 3, Bill Gates - Tiểu sử và những đóng góp, 2019-2020}
+	\fancyfoot[R]{\scriptsize \ttfamily Trang {\thepage}/\pageref{LastPage}}
+	\renewcommand{\headrulewidth}{0.3pt}
+	\renewcommand{\footrulewidth}{0.3pt}
+%Trang bìa
+%--------------------------------
+\begin{document} 
+\begin{titlepage}
+
+	\begin{center}
+	TRƯỜNG ĐẠI HỌC BÁCH KHOA, ĐHQG TP.HỒ CHÍ MINH\\
+	KHOA KHOA HỌC \& KỸ THUẬT MÁY TÍNH
+	\end{center}
+	
+	\vspace{1cm}
+	
+	\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[width=3cm]{hcmut.png}
+	\end{center}
+	\end{figure}
+	
+	\vspace{1cm}
+	
+	
+	\begin{center}
+	\begin{tabular}{c}
+	\multicolumn{1}{l}{\textbf{{\Large CẤU TRÚC RỜI RẠC CHO KHMT (CO1007)}}}\\
+	~~\\
+	\hline
+	\\
+	\multicolumn{1}{l}{\textbf{{\Large Ứng dụng Thống kê}}}\\
+	\\
+	\textbf{\normalsize \textit{ Khảo sát kết quả của bài tập online cho phép nộp bài nhiều lần}}\\
+	\\
+	\hline
+	\end{tabular}
+	\end{center}
+	
+	\vspace{3cm}
+	
+	\begin{table}[h]
+	\begin{tabular}{rrl}
+	
+	\hspace{4 cm} & Giáo viên hướng dẫn: & Huỳnh Tường Nguyên\\
+	& & Trần Tuấn Anh \\
+	& & Nguyễn Ngọc Lễ  \\
+	%& Class: MT19KH10, & Group: Groove Street \\
+	& Thành viên nhóm: & Nguyễn Thanh Toàn - 1910617 \\
+	& & Phạm Nhật Minh - 1910346 \\
+	& & Lê Hoàng Anh - 1910752 \\
+	& & Trần Đình Gia Hải - 1911105 \\
+	
+	& & Huỳnh Đức Thịnh - 1910563 \\
+	& & Nguyễn Phúc Thịnh - 1910565 \\
+	
+	\end{tabular}
+	\end{table}
+	\vspace{4cm}
+	\begin{center}
+	{\footnotesize TP.HCM, 12/2019}
+	\end{center}
+	\end{titlepage}
+	\newpage
+
+%Trang lót bìa
+%--------------------------------
+
+	\noindent .
+	\vspace{6cm}
+	
+	
+	\begin{center}
+	\begin{tabular}{c}
+	\multicolumn{1}{l}{\textbf{{\Large NHẬP MÔN ĐIỆN TOÁN}}}\\
+	~~\\
+	\hline
+	\\
+	\multicolumn{1}{l}{\textbf{{\Large Assignment 3}}}\\
+	\\
+	\textbf{\Huge Bill Gates - Tiểu sử và những đóng góp}\\
+	\\
+	\hline
+	\end{tabular}
+	\end{center}
+
+	\vspace{5cm}
+
+	\begin{center}
+	\enquote{Tôi đã thi trượt một số môn, nhưng bạn tôi thì đã qua tất cả. Bây giờ anh ta là một kỹ sư trong Microsoft còn tôi là chủ sở hữu của Microsoft}
+	\\
+	\noindent \textbf{\textit{- Bill Gates}}
+	\end{center}
+
+	\newpage
+%Bắt đầu văn bản
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \textit{{\Large\tableofcontents}}
+ \vspace{3cm}
+
+
+ \noindent \textit{\footnotesize \textbf{Bạn có thể ghé thăm trang web của chúng tôi tại:} http://www.tuanh.info/Assignment3/assign.html}
+
+ \newpage
+
+ \section{Tiểu sử Bill Gates} 
+ \subsection{Giới thiệu sơ lược}
+ \begin{center}
+ %\includegraphics[width=0.75\textwidth]{} %Chèn hình vô nè 
+
+ \end{center}
+  William Henry "Bill" Gates III (sinh ngày 28 tháng 10 năm 1955) là một doanh nhân người Mỹ, nhà từ thiện, tác giả và chủ tịch tập đoàn Microsoft, hãng phần mềm khổng lồ mà ông cùng với Paul Allen đã sáng lập ra. Ông luôn có mặt trong danh sách những người giàu nhất trên thế giới và gần đây, ông là người giàu thứ hai thế giới với tài sản 105,3 tỷ đô la Mỹ. Ở Microsoft, Gates làm CEO và kiến trúc sư trưởng phần mềm định hướng cho sự phát triển của tập đoàn. Hiện tại, ông là cổ đông với tư cách cá nhân lớn nhất trong tập đoàn. Ngày làm việc toàn phần cuối cùng dành cho Microsoft của Gates là ngày 27 tháng 6 năm 2008. Ông vẫn còn giữ cương vị chủ tịch Microsoft nhưng không điều hành hoạt động tập đoàn.
+  \subsection{Tiểu sử} %Tiêu đề lớn nè 
+   \subsubsection{Thời niên thiếu} %Tiêu đề nhỏ hơn xíu 
+    \begin{center}
+   		%\includegraphics[width=0.75\textwidth]{}
+   	\end{center}
+\newpage
+
+\
+%Nguồn tham khảo
+%--------------------------------------------------------
+\newpage
+\section{Nguồn tham khảo}
+\begin{thebibliography}{80}
+
+
+	\bibitem{GG} Google Images. Last access: 29/12/2019
+
+
+	\bibitem{http://wikipedia:2019} Wikipedia.
+	``\textbf{link: http://en.wikipedia.org/}'',
+	Last access: 29/12/2019.
+	
+	
+	
+\end{thebibliography}	
+\end{document}
