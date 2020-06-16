@@ -1,5 +1,0 @@
-\contentsline {section}{\numberline {1}Tiểu sử Bill Gates}{3}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Giới thiệu sơ lược}{3}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Tiểu sử}{3}{subsection.1.2}%
-\contentsline {subsubsection}{\numberline {1.2.1}Thời niên thiếu}{3}{subsubsection.1.2.1}%
-\contentsline {section}{\numberline {2}Nguồn tham khảo}{5}{section.2}%
