@@ -32,6 +32,7 @@ print(nrow(pta1))
 pta2 <- thienan
 pta2 <- pta2 %>% group_by(pta2$'Ma so ID') %>% arrange(pta2$'Da bat dau vao luc') %>% slice(1:1)
 pta2 <- subset(pta2, pta2$'Diem/10,00' >= 9 & pta2$'Ma so ID' > 1)
+pta2 <- pta2[!duplicated(pta2$'Ma so ID'),]
 pta2 %>% ggplot(aes(x = pta2$'Diem/10,00')) + geom_bar(width = 0.2, fill = "#FF6666") + xlab("Mark") + ylab("Count") + ggtitle("Mark Range Q9")
 print("So hoc sinh thong minh la: ") 
 print(nrow(pta2))
@@ -43,7 +44,8 @@ print(nrow(pta2))
 #    4. Vẽ biểu đồ phổ điểm dạng cột (với x là các giá trị điểm, y là số lượng sinh viên đạt điểm đó) cho lần nộp đầu của các sinh viên học đối phó
 #    5. In ra số lượng sinh viên học đối phó bằng cách đếm số dòng của data frame đã lọc ở bước 3
 #Q9: 1. Đưa dữ liệu trong data frame thienan vào pta2 để không làm ảnh hưởng dữ liệu gốc khi tính toán
-#    2. 
-#    3. Xóa những lần nộp bài sau, chỉ xét lần nộp bài đầu tiên của mỗi sinh viên
-#    4. Vẽ biểu đồ phổ điểm dạng cột (với x là các giá trị điểm, y là số lượng sinh viên đạt điểm đó) cho lần nộp đầu của các sinh viên học đối phó
-#    5. In ra số lượng sinh viên học đối phó bằng cách đếm số dòng của data frame đã lọc ở bước 3
+#    2. Xếp các lần nộp bài của cùng một sinh viên vào một nhóm bằng group_by, hàm arrange sẽ sắp xếp thời gian theo thứ tự tăng dần, sau đó dùng lệnh slide(1:n) để lấy n lần nộp đầu tiên
+#    3. Lọc ra những sinh viên trong số n lần nộp đó đạt được điểm k. (Điều kiện "Ma so ID > 1" để loại bỏ kết quả trung bình cuối file Excel)
+#    4. Xóa những lần nộp bài sau, chỉ xét lần nộp bài đầu tiên đạt điểm k của mỗi sinh viên
+#    5. Vẽ biểu đồ phổ điểm dạng cột (với x là các giá trị điểm, y là số lượng sinh viên đạt điểm đó) cho lần nộp đầu của các sinh viên thông minh
+#    6. In ra số lượng sinh viên thông minh bằng cách đếm số dòng của data frame đã lọc được
