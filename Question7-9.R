@@ -35,3 +35,15 @@ pta2 <- subset(pta2, pta2$'Diem/10,00' >= 9 & pta2$'Ma so ID' > 1)
 pta2 %>% ggplot(aes(x = pta2$'Diem/10,00')) + geom_bar(width = 0.2, fill = "#FF6666") + xlab("Mark") + ylab("Count") + ggtitle("Mark Range Q9")
 print("So hoc sinh thong minh la: ") 
 print(nrow(pta2))
+
+#Refine data: Chuẩn hóa định dạng ngày tháng và thời gian để tiện cho tính toán về sau. Chuẩn hóa điểm thành dạng số
+#Q7: 1. Đưa dữ liệu trong data frame thienan vào pta1 để không làm ảnh hưởng dữ liệu gốc khi tính toán
+#    2. Dùng subset lọc những phần tử của column "Da bat dau vao luc" phù hợp với t2 (Muốn lọc với t2 khác thì sửa thời gian trong code)
+#    3. Xóa những lần nộp bài sau, chỉ xét lần nộp bài đầu tiên của mỗi sinh viên
+#    4. Vẽ biểu đồ phổ điểm dạng cột (với x là các giá trị điểm, y là số lượng sinh viên đạt điểm đó) cho lần nộp đầu của các sinh viên học đối phó
+#    5. In ra số lượng sinh viên học đối phó bằng cách đếm số dòng của data frame đã lọc ở bước 3
+#Q9: 1. Đưa dữ liệu trong data frame thienan vào pta2 để không làm ảnh hưởng dữ liệu gốc khi tính toán
+#    2. 
+#    3. Xóa những lần nộp bài sau, chỉ xét lần nộp bài đầu tiên của mỗi sinh viên
+#    4. Vẽ biểu đồ phổ điểm dạng cột (với x là các giá trị điểm, y là số lượng sinh viên đạt điểm đó) cho lần nộp đầu của các sinh viên học đối phó
+#    5. In ra số lượng sinh viên học đối phó bằng cách đếm số dòng của data frame đã lọc ở bước 3
