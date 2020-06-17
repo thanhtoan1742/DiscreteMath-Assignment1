@@ -2,11 +2,10 @@ library(dplyr)
 library(xlsx)
 library(ggplot2)
 
-filename = "data\\1.xlsx"
 
 #Read the Excel file
 thienan = data.frame()
-thienan = read.xlsx(".xlsx", sheetIndex = 1)
+thienan = read.xlsx("/Users/Tran Dinh Gia Hai/Desktop/CTRR/1.xlsx", sheetIndex = 1)
 namesList = c("Ma so ID", "Tinh trang", "Da bat dau vao luc", "Da hoan thanh", "Thoi gian thuc hien", "Diem/10,00", "Q. 1 /1,00", "Q. 2 /1,00", "Q. 3 /1,00", "Q. 4 /1,00", "Q. 5 /1,00", "Q. 6 /1,00", "Q. 7 /1,00", "Q. 8 /1,00", "Q. 9 /1,00", "Q. 10 /1,00")
 Encoding(namesList) = "UTF-8"
 names(thienan) = namesList
@@ -50,3 +49,8 @@ print(nrow(pta2))
 #    4. Xóa những lần nộp bài sau, chỉ xét lần nộp bài đầu tiên đạt điểm k của mỗi sinh viên
 #    5. Vẽ biểu đồ phổ điểm dạng cột (với x là các giá trị điểm, y là số lượng sinh viên đạt điểm đó) cho lần nộp đầu của các sinh viên thông minh
 #    6. In ra số lượng sinh viên thông minh bằng cách đếm số dòng của data frame đã lọc được
+
+#t2 or File 1: 2020-04-10 00:00:00
+#t2 of File 2: 2020-04-20 00:00:00
+#t2 of File 3: 2020-04-24 00:00:00
+#t2 of File 3: 2020-04-18 00:00:00

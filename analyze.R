@@ -4,7 +4,7 @@ library(tidyverse);
 library(xlsx);
 
 MD = 7241;
-filename = "data\\1.xlsx";
+filename = "data\\2.xlsx";
 
 to_number = function(a) {
     res = as.numeric(sub(",", ".", a, fixed = TRUE));
@@ -37,5 +37,8 @@ for (i in 2:nrow(time_begin_distrubution))
 print(time_begin_distrubution);
 ggplot(data = time_begin_distrubution) +
     geom_line(mapp = aes(x = time_begin, y = count));
+
+hardwork_time_begin = time_begin_distrubution[nrow(time_begin_distrubution) %/% 3, ]$time_begin;
 print(min(time_begin_distrubution$time_begin));
+print(hardwork_time_begin);
 print(max(time_begin_distrubution$time_begin));
