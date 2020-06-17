@@ -2,10 +2,11 @@ library(dplyr)
 library(xlsx)
 library(ggplot2)
 
+filename = "data\\1.xlsx"
 
 #Read the Excel file
 thienan = data.frame()
-thienan = read.xlsx("/Users/Tran Dinh Gia Hai/Desktop/CTRR/1.xlsx", sheetIndex = 1)
+thienan = read.xlsx(".xlsx", sheetIndex = 1)
 namesList = c("Ma so ID", "Tinh trang", "Da bat dau vao luc", "Da hoan thanh", "Thoi gian thuc hien", "Diem/10,00", "Q. 1 /1,00", "Q. 2 /1,00", "Q. 3 /1,00", "Q. 4 /1,00", "Q. 5 /1,00", "Q. 6 /1,00", "Q. 7 /1,00", "Q. 8 /1,00", "Q. 9 /1,00", "Q. 10 /1,00")
 Encoding(namesList) = "UTF-8"
 names(thienan) = namesList
