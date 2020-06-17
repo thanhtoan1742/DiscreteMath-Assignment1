@@ -61,7 +61,7 @@
 			\tiny \bf 
 		\end{tabular}  }
 	\fancyfoot{} % clear all footer fields
-	\fancyfoot[L]{\scriptsize \ttfamily Assignment 3, Bill Gates - Tiểu sử và những đóng góp, 2019-2020}
+	\fancyfoot[L]{\scriptsize \ttfamily Ứng dụng thống kê - Khảo sát kết của bài tập online cho phép nộp bài nhiều lần}
 	\fancyfoot[R]{\scriptsize \ttfamily Trang {\thepage}/\pageref{LastPage}}
 	\renewcommand{\headrulewidth}{0.3pt}
 	\renewcommand{\footrulewidth}{0.3pt}
@@ -88,7 +88,7 @@
 	
 	\begin{center}
 	\begin{tabular}{c}
-	\multicolumn{1}{l}{\textbf{{\Large CẤU TRÚC RỜI RẠC CHO KHMT (CO1007)}}}\\
+	\multicolumn{1}{l}{\textbf{{\Large BÁO CÁO BTL CẤU TRÚC RỜI RẠC CHO KHMT}}}\\
 	~~\\
 	\hline
 	\\
@@ -121,7 +121,7 @@
 	\end{table}
 	\vspace{3cm}
 	\begin{center}
-	{\footnotesize TP.HCM, 12/2019}
+	{\footnotesize TP.HCM, 06/2020}
 	\end{center}
 	\end{titlepage}
 	\newpage
@@ -135,7 +135,7 @@
 	
 \begin{center}
 	\begin{tabular}{c}
-	\multicolumn{1}{l}{\textbf{{\Large CẤU TRÚC RỜI RẠC CHO KHMT (CO1007)}}}\\
+	\multicolumn{1}{l}{\textbf{{\Large BÁO CÁO BTL CẤU TRÚC RỜI RẠC CHO KHMT}}}\\
 	~~\\
 	\hline
 	\\
@@ -160,7 +160,8 @@
  
 \newpage
 
-\section{File 1} \
+\section{Đề bài và cách giải tổng quát} 
+\subsection{Đề bài}
 \begin{enumerate}
 \item {\textbf{(Câu 1)} Xác định số lượng sinh viên trong tập mã}
     
@@ -259,18 +260,134 @@
 \end{enumerate}    
     
 \end{enumerate}
+\subsection{Lời giải câu 1}
+\subsection{Lời giải câu 2}
+\subsection{Lời giải câu 3}
+\subsection{Lời giải câu 4}
+\subsection{Lời giải câu 5}
 
+\subsection{Lời giải câu 7}
+\begin{enumerate}
+    \item \textbf{Bước 1:} Đưa dữ liệu trong data frame thienan vào pta1 để không làm ảnh hưởng dữ liệu gốc khi tính toán
+    \item \textbf{Bước 2:} Dùng subset lọc những phần tử của column "Da bat dau vao luc" phù hợp với t2 (Muốn lọc với t2 khác thì sửa thời gian trong code)
+    \item \textbf{Bước 3:} Xóa những lần nộp bài sau, chỉ xét lần nộp bài đầu tiên của mỗi sinh viên
+    \item \textbf{Bước 4:} Vẽ biểu đồ phổ điểm dạng cột (với x là các giá trị điểm, y là số lượng sinh viên đạt điểm đó) cho lần nộp đầu của các sinh viên học đối phó
+    \item \textbf{Bước 5:} In ra số lượng sinh viên học đối phó bằng cách đếm số dòng của data frame đã lọc ở bước 3
+\end{enumerate}
+\subsection{Lời giải câu 9}
+ Ta chọn k = 9, n = 1
+\begin{enumerate}
+    \item \textbf{Bước 1:} Đưa dữ liệu trong data frame thienan vào pta2 để không làm ảnh hưởng dữ liệu gốc khi tính toán
+    \item \textbf{Bước 2:} Xếp các lần nộp bài của cùng một sinh viên vào một nhóm bằng group\_by, hàm arrange sẽ sắp xếp thời gian theo thứ tự tăng dần, sau đó dùng lệnh slide(1:n) để lấy n lần nộp đầu tiên
+    \item \textbf{Bước 3:} Lọc ra những sinh viên trong số n lần nộp đó đạt được điểm k. (Điều kiện "Ma so ID" > 1 để loại bỏ kết quả trung bình cuối file Excel)
+    \item \textbf{Bước 4:} Xóa những lần nộp bài sau, chỉ xét lần nộp bài đầu tiên đạt điểm k của mỗi sinh viên
+    \item \textbf{Bước 5:} Vẽ biểu đồ phổ điểm dạng cột (với x là các giá trị điểm, y là số lượng sinh viên đạt điểm đó) cho lần nộp đầu của các sinh viên thông minh
+    \item \textbf{Bước 6:} In ra số lượng sinh viên thông minh bằng cách đếm số dòng của data frame đã lọc được
+\end{enumerate}
 \newpage
 
-\section{File 2}
+\section{Kết quả áp dụng thực tế}
+\subsection{File 1}
+\textbf{Câu 1: }\\
+\textbf{Câu 2: }\\
+\textbf{Câu 3: }\\
+\textbf{Câu 4: }\\
+\textbf{Câu 5: }\\
+\textbf{Câu 7: } \\
+\noindent Số sinh viên học đối phó là : 180\\
+\noindent $t_2$ = 2020-04-10 00:00:00 \\
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale=0.6]{Doc/q7-plot1.png}
+    \caption{Phổ điểm của các sinh viên học đối phó}
+    \label{fig:my_label}
+\end{figure}
+\\
+\textbf{Câu 9: } 
+\noindent Số sinh viên thông minh là: 285
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale=0.6]{Doc/q9-plot1.PNG}
+    \caption{Phổ điểm của các sinh viên thông minh}
+    \label{fig:my_label}
+\end{figure}
+\newpage
+\subsection{File 2}
+\textbf{Câu 1: }\\
+\textbf{Câu 2: }\\
+\textbf{Câu 3: }\\
+\textbf{Câu 4: }\\
+\textbf{Câu 5: }\\
+\textbf{Câu 7: }\\
+\noindent Số sinh viên học đối phó là: 197
+\noindent $t_2$ = 2020-04-20 00:00:00
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale=0.6]{Doc/q7-plot2.PNG}
+    \caption{Phổ điểm của các sinh viên học đối phó}
+    \label{fig:my_label}
+\end{figure}
+\\
+\textbf{Câu 9: }\\
+\noindent Số sinh viên thông minh là 250
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale=0.6]{Doc/q9-plot2.PNG}
+    \caption{Phổ điểm các sinh viên thông minh}
+    \label{fig:my_label}
+\end{figure}
+\newpage
+\subsection{File 3}
+\textbf{Câu 1: }\\
+\textbf{Câu 2: }\\
+\textbf{Câu 3: }\\
+\textbf{Câu 4: }\\
+\textbf{Câu 5: }\\
+\textbf{Câu 7: }\\
+\noindent Số sinh viên học đối phó là: 138
+\noindent $t_2$ = 2020-04-24 00:00:00
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale=0.6]{Doc/q7-plot3.PNG}
+    \caption{Phổ điểm các sinh viên học đối phó}
+    \label{fig:my_label}
+\end{figure}
+\\
+\textbf{Câu 9: }\\
+\noindent Số sinh viên thông minh là: 250
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale=0.6]{Doc/q9-plot3.PNG}
+    \caption{Phổ điểm các sinh viên thông minh}
+    \label{fig:my_label}
+\end{figure}
 \newpage
 
 
-\section{File 3}
-\newpage
-
-
-\section{File 4}
+\subsection{File 4}
+\textbf{Câu 1: }\\
+\textbf{Câu 2: }\\
+\textbf{Câu 4: }\\
+\textbf{Câu 3: }\\
+\textbf{Câu 5: }\\
+\textbf{Câu 7: }\\
+\noindent Số sinh viên học đối phó là: 159
+\noindent $t_2$ = 2020-04-18 00:00:00
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale=0.6]{Doc/q7-plot4.PNG}
+    \caption{Phổ điểm các sinh viên học đối phó}
+    \label{fig:my_label}
+\end{figure}
+\\
+\textbf{Câu 9: }\\
+\noindent Số sinh viên thông minh là: 298
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale=0.6]{Doc/q9-plot4.PNG}
+    \caption{Phổ điểm các sinh viên thông minh}
+    \label{fig:my_label}
+\end{figure}
 %Nguồn tham khảo
 %--------------------------------------------------------
 \newpage
