@@ -4,7 +4,7 @@ library(tidyverse);
 library(xlsx);
 
 MD = 7241;
-filename = "data\\3.xlsx";
+filename = "data\\4.xlsx";
 
 debug_log = function(data) {
     print("-------------------------------DEBUG-------------------------------")
@@ -94,14 +94,14 @@ Question5 = function(data) {
     ggplot(data = score_frequency) + 
         geom_line(mapping = aes(x = sub_no_6, y = freq)) +
         labs(title = "Student's score after 6 submissions", x = "Score", y = "Number of student");
-    ggsave("Screenshot\\Q5\\5a.png");
+    ggsave("Screenshot\\Q5\\5a_file4.png");
 
     # b
     score_frequency <- score %>% group_by(sub_no_3) %>% summarise("freq" = n());
     ggplot(data = score_frequency) +   
         geom_line(mapping = aes(x = sub_no_3, y = freq)) +
         labs(title = "Student's score after 3 submissions", x = "Score", y = "Number of student");
-    ggsave("Screenshot\\Q5\\5b.png");
+    ggsave("Screenshot\\Q5\\5b_file4.png");
 
     # c
     average_score <- vector(mode = "numeric", length = max_nob);
@@ -112,7 +112,7 @@ Question5 = function(data) {
     ggplot(data = average_score) +   
         geom_line(mapping = aes(x = no, y = ave)) +
         labs(title = "Student's average score after x submissions", x = "Number of submission", y = "Average score");
-    ggsave("Screenshot\\Q5\\5c.png");
+    ggsave("Screenshot\\Q5\\5c_file4.png");
 
     # d
     print("diem trung binh:")
@@ -128,8 +128,8 @@ hard_working_student_with_many_sub = function(data) {
 }
 
 Question10 = function(data) {
-    # active_student <- union(hard_working_student_with_many_sub(data)$stdid, smart_student(data)$stdid);
-    active_student = hard_working_student_with_many_sub(data) %>% pull(stdid);
+    active_student <- union(hard_working_student_with_many_sub(data)$stdid, smart_student(data)$stdid);
+    active_student <- hard_working_student_with_many_sub(data) %>% pull(stdid);
     active_student <- data %>% filter(stdid %in% active_student) %>% group_by(stdid) %>% slice_max(total_score, n = 1);
 
     # b
@@ -147,7 +147,8 @@ Question11 = function(data) {
     all_type <- intersect(all_type, good_student(data)$stdid);
     all_type <- intersect(all_type, smart_student(data)$stdid);
 
-    
+    print("danh sach sinh vien la sinh vien cham chi, gioi, thong minh, doi pho");
+    print(all_type);    
 }
 
 # READ DATA
@@ -162,6 +163,7 @@ data$total_score <- to_number(data$total_score);
 arrange(data, desc(time_begin));
 
 Question5(data);
+Question10(data);
 
 
 # ## QUESTION 5
@@ -183,3 +185,6 @@ Question5(data);
 
 # the final score of all student is the maximum score of all that student's submission.
 # The final average score is the average of the final score of all students, which is average_score[maximum number of submission]
+
+## QUESTION 10
+print
