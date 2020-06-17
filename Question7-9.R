@@ -49,3 +49,8 @@ print(nrow(pta2))
 #    4. Xóa những lần nộp bài sau, chỉ xét lần nộp bài đầu tiên đạt điểm k của mỗi sinh viên
 #    5. Vẽ biểu đồ phổ điểm dạng cột (với x là các giá trị điểm, y là số lượng sinh viên đạt điểm đó) cho lần nộp đầu của các sinh viên thông minh
 #    6. In ra số lượng sinh viên thông minh bằng cách đếm số dòng của data frame đã lọc được
+
+#t2 or File 1: 2020-04-10 00:00:00
+#t2 of File 2: 2020-04-20 00:00:00
+#t2 of File 3: 2020-04-24 00:00:00
+#t2 of File 3: 2020-04-18 00:00:00
