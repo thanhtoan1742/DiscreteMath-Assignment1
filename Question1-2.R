@@ -14,7 +14,7 @@ sum_all = function(data_col,data_size) {
 }
 
 #Get data
-DataChart = xlsx::read.xlsx("Data\\4.xlsx", sheetIndex = 1, stringsAsFactors = FALSE)
+DataChart = xlsx::read.xlsx("Data\\1.xlsx", sheetIndex = 1, stringsAsFactors = FALSE)
 colnames(DataChart) = c("stdid", "stat", "time_begin", "time_end", "time_duration", "total_score", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10")
 
 #Question 2
@@ -309,10 +309,11 @@ hist(final_score_chart_first_second$times,
      main = "Submission times spectral two highest final score students",
      xlab = "Submission times")
 
+
 #2.v)
 print("2.v)")
 print(result_chart)
-hist(final_score_chart$final_score)
+
 
 #2.w)
 print("2.w)")
@@ -327,9 +328,12 @@ for(i in 1:nrow(result_chart))
     }
   }
 }
+
+result_chart$score = c(1:nrow(result_chart))
 print(result_chart)
 print(sum(final_score_chart$times))
-hist(final_score_chart$times)
+barplot(result_chart$times,xlab = 'Phan diem tong ket', ylim = c(0,400),ylab = 'So sinh vien',names.arg = result_chart$score, main = "Tong so sinh vien theo phan diem cao thu k");
+barplot(result_chart$total_submit,ylim = c(0,400),xlab = 'Phan diem tong ket',ylab = 'So lan nop',names.arg = result_chart$score, main = "Tong so lan nop theo phan diem cao thu k");
 
 #1)Number of Students
 print(nrow(final_score_chart))
