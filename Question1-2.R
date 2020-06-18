@@ -14,7 +14,7 @@ sum_all = function(data_col,data_size) {
 }
 
 #Get data
-DataChart = xlsx::read.xlsx("Data\\1.xlsx", sheetIndex = 1, stringsAsFactors = FALSE)
+DataChart = xlsx::read.xlsx("Data\\4.xlsx", sheetIndex = 1, stringsAsFactors = FALSE)
 colnames(DataChart) = c("stdid", "stat", "time_begin", "time_end", "time_duration", "total_score", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10")
 
 #Question 2
@@ -70,9 +70,20 @@ print("Time submit of students having at least 1 lowest score submit");
 print(lowest_list);
 lowest_list$times = as.integer(lowest_list$times)
 print(class(lowest_list$times))
-hist(lowest_list$times,
-     main = "Submission times spectral lowest score student",
-     xlab = "Submission times")
+lowest_list_plot = data.frame(
+  "times" = unique(lowest_list$times),
+  "frequency" = c(0)
+)
+for(i in 1:nrow(lowest_list_plot))
+{
+  for(j in 1:nrow(lowest_list))
+  if(lowest_list_plot$times[i] == lowest_list$times[j] )
+  {
+    lowest_list_plot$frequency[i] = lowest_list_plot$frequency[i] + 1
+  }
+}
+print(lowest_list_plot)
+barplot(lowest_list_plot$frequency,ylim = c(0,10),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = lowest_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem thap nhat");
 
 #2.e) Get the lowest student final score
 print("2.e)")
@@ -129,9 +140,20 @@ for (i in 1:nrow(lowest_final_list))
 print("List of student with lowest final score and submit time")
 print(lowest_final_list);
 lowest_final_list$times = as.integer(lowest_final_list$times)
-hist(lowest_final_list$times,
-     main = "Submission times spectral of student having lowest final score",
-     xlab = "Submission times");
+lowest_final_list_plot = data.frame(
+  "times" = unique(lowest_final_list$times),
+  "frequency" = c(0)
+)
+for(i in 1:nrow(lowest_final_list_plot))
+{
+  for(j in 1:nrow(lowest_final_list))
+    if(lowest_final_list_plot$times[i] == lowest_final_list$times[j] )
+    {
+      lowest_final_list_plot$frequency[i] = lowest_final_list_plot$frequency[i] + 1
+    }
+}
+print(lowest_final_list_plot)
+barplot(lowest_final_list_plot$frequency,ylim = c(0,10),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = lowest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem tong ket thap nhat");
 
 #2.h) Find Highest_score
 print("2.h)")
@@ -147,28 +169,38 @@ print(highest_chart$stdid);
 
 #2.j) Spectral of submit time from students have at least a highest score submit
 print("2.j)")
-highest_final_score_chart = data.frame(
+highest_final_list = data.frame(
   "stdid" = highest_chart$stdid,
   "times" = c(0)
 )
-
-for (i in 1:nrow(highest_final_score_chart))
+for (i in 1:nrow(highest_final_list))
 {
-  stdid_temp = highest_final_score_chart$stdid[i];
+  stdid_temp = highest_final_list$stdid[i];
   for(j in 1:nrow(DataChart))
   {
     stdid_temp_2 = DataChart$stdid[j];
     if(!is.na(stdid_temp_2) && (stdid_temp_2 == stdid_temp))
     {
-      highest_final_score_chart$times[i] = highest_final_score_chart$times[i] + 1;
+      highest_final_list$times[i] = highest_final_list$times[i] + 1;
     }
   }
 }
 print("Highest final score chart and submit times");
-print(highest_final_score_chart);
-hist(highest_final_score_chart$times,
-     main = "Submission times spectral of highest score students",
-     xlab = "Submission times")
+print(highest_final_list);
+highest_final_list_plot = data.frame(
+  "times" = unique(highest_final_list$times),
+  "frequency" = c(0)
+)
+for(i in 1:nrow(highest_final_list_plot))
+{
+  for(j in 1:nrow(highest_final_list))
+    if(highest_final_list_plot$times[i] == highest_final_list$times[j] )
+    {
+      highest_final_list_plot$frequency[i] = highest_final_list_plot$frequency[i] + 1
+    }
+}
+print(highest_final_list_plot)
+barplot(highest_final_list_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = highest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem cao nhat");
 
 #2.k)
 print("2.k)")
@@ -184,10 +216,8 @@ print(highest_chart$stdid);
 #2.m)
 print("2.m)")
 print("Highest final score chart and submit times");
-print(highest_final_score_chart);
-hist(highest_final_score_chart$times,
-     main = "Submission times spectral of final highest score students",
-     xlab = "Submission times")
+print(highest_final_list)
+barplot(highest_final_list_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = highest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co diem tong ket cao nhat");
 
 #2.n) Caculate average final_score of all student
 print("2.n)")
@@ -212,7 +242,6 @@ for (i in 1:nrow(final_score_chart))
     }
   }
 }
-
 #average_final_list = subset(final_score_chart, final_score == average_final_score_all_student)
 #print("Final score list with average score")
 #print(average_final_list);
@@ -244,17 +273,17 @@ print("Range of average score");
 range_final_value = range_final[2] - range_final[1]
 print(range_final_value)
 
-#Probability of Distribution Average score
-probability_chart = data.frame(
+#Create result_chart save total_submit and numofstudent classified by final score
+result_chart = data.frame(
   "score" = NULL,
   "times" = NULL
 )
 for(i in 1:nrow(final_score_chart))
 {
-  if(final_score_chart$final_score[i] %in% probability_chart$score)
+  if(final_score_chart$final_score[i] %in% result_chart$score)
   {
-    index = which(probability_chart$score == final_score_chart$final_score[i])
-    probability_chart$times[index] = probability_chart$times[index] + 1
+    index = which(result_chart$score == final_score_chart$final_score[i])
+    result_chart$times[index] = result_chart$times[index] + 1
   }
   else 
   {
@@ -262,16 +291,9 @@ for(i in 1:nrow(final_score_chart))
     "score" = c(final_score_chart$final_score[i]),
     "times" = 1
     )
-    probability_chart = rbind(probability_chart,temp_chart)
+    result_chart = rbind(result_chart,temp_chart)
   }
 }
-
-result_chart = probability_chart
-probability_chart$times = probability_chart$times / nrow(final_score_chart)
-probability_chart = probability_chart[order(-result_chart$score),]
-
-#print("probablility of distribution")
-#print(probability_chart);
 
 variance_final_score = var(final_score_chart$final_score)
 standard_deviation_final_score = sd(final_score_chart$final_score)
@@ -301,14 +323,25 @@ print(result_chart$times[1] + result_chart$times[2])
 
 #2.u)
 print("2.u)")
-final_score_chart_first = subset(final_score_chart, final_score == result_chart$score[1])
-final_score_chart_second = subset(final_score_chart, final_score == result_chart$score[2])
-final_score_chart_first_second = rbind(final_score_chart_first, final_score_chart_second)
-print(final_score_chart_first_second)
-hist(final_score_chart_first_second$times,
-     main = "Submission times spectral two highest final score students",
-     xlab = "Submission times")
+final_score_list_first = subset(final_score_chart, final_score == result_chart$score[1])
+final_score_list_second = subset(final_score_chart, final_score == result_chart$score[2])
+final_score_list_first_second = rbind(final_score_list_second, final_score_list_first)
+print(final_score_list_first_second)
 
+final_score_list_first_second_plot = data.frame(
+  "times" = unique(final_score_list_first_second$times),
+  "frequency" = c(0)
+)
+for(i in 1:nrow(final_score_list_first_second_plot))
+{
+  for(j in 1:nrow(final_score_list_first_second))
+    if(final_score_list_first_second_plot$times[i] == final_score_list_first_second$times[j] )
+    {
+      final_score_list_first_second_plot$frequency[i] = final_score_list_first_second_plot$frequency[i] + 1
+    }
+}
+print(final_score_list_first_second_plot)
+barplot(final_score_list_first_second_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = final_score_list_first_second_plot$times, main = "Pho so lan nop cua nhung hoc sinh co 1 diem tong ket cao nhat/nhi");
 
 #2.v)
 print("2.v)")
