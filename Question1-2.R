@@ -14,141 +14,105 @@ sum_all = function(data_col,data_size) {
 }
 
 #Get data
-DataChart = xlsx::read.xlsx("Data\\5.xlsx", sheetIndex = 1, stringsAsFactors = FALSE)
+DataChart = xlsx::read.xlsx("Data\\4.xlsx", sheetIndex = 1, stringsAsFactors = FALSE)
 colnames(DataChart) = c("stdid", "stat", "time_begin", "time_end", "time_duration", "total_score", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10")
 
-#Question 1
-"Number of submit"
-
-
 #Question 2
-# 2.a) Sum of all student score
+# 2.a) Total Score List
+print("2.a)")
 for(i in 1:nrow(DataChart))
 {
   if(DataChart$total_score[i] == "-")
   {
-    DataChart$total_score[i] = "0,00"
-  }
-  if(DataChart$Q1[i] == "-")
-  {
-    DataChart$Q1[i] = "0,00"
-  }
-  if(DataChart$Q2[i] == "-")
-  {
-    DataChart$Q2[i] = "0,00"
-  }
-  if(DataChart$Q3[i] == "-")
-  {
-    DataChart$Q3[i] = "0,00"
-  }
-  if(DataChart$Q4[i] == "-")
-  {
-    DataChart$Q4[i] = "0,00"
-  }
-  if(DataChart$Q5[i] == "-")
-  {
-    DataChart$Q5[i] = "0,00"
-  }
-  if(DataChart$Q6[i] == "-")
-  {
-    DataChart$Q6[i] = "0,00"
-  }
-  if(DataChart$Q7[i] == "-")
-  {
-    DataChart$Q7[i] = "0,00"
-  }
-  if(DataChart$Q8[i] == "-")
-  {
-    DataChart$Q8[i] = "0,00"
-  }
-  if(DataChart$Q9[i] == "-")
-  {
-    DataChart$Q9[i] = "0,00"
-  }
-  if(DataChart$Q10[i] == "-")
-  {
-    DataChart$Q10[i] = "0,00"
+    DataChart$total_score[i] = "-1,00"
   }
 }
 
 DataChart$total_score = gsub(",",".",DataChart$total_score);
 DataChart$total_score = as.numeric(DataChart$total_score);
-sum_all_total_score = sum_all(DataChart$total_score, nrow(DataChart));
-print("sum score of all submit")
-print(sum_all_total_score);
+DataChart = subset(DataChart, total_score >= 0)
+total_score_list = DataChart$total_score
+print(total_score_list)
 
 # 2.b) Finding lowest-score
-lowest_score_b = min(DataChart$total_score);
+print("2.b)")
+lowest_score = min(DataChart$total_score);
 print("lowest score");
-print(lowest_score_b);
+print(lowest_score);
 
+print("2.c)")
 # 2.c) List of student with lowest-score
-lowest_chart_c = subset(DataChart, total_score == lowest_score_b);
+lowest_list = subset(DataChart, total_score == lowest_score);
+lowest_list = lowest_list$stdid;
+unique(lowest_list, incomparables = FALSE)
 print("list student have a lowest score submit");
-print(lowest_chart_c$stdid);
+lowest_list = data.frame(
+  "stdid" = lowest_list
+)
+print(lowest_list$stdid);
 
 # 2.d) Spectral of submit time from students of lowest score
-lowest_time_d = data.frame(
-  "stdid" = lowest_chart_c$stdid,
-  "times" = c(0)
-);
-
-for (i in 1:nrow(lowest_time_d))
+print("2.d)")
+lowest_list$times = c(0)
+for (i in 1:nrow(lowest_list))
 {
-  stdid_temp = lowest_time_d$stdid[i];
+  stdid_temp = lowest_list$stdid[i];
   for(j in 1:nrow(DataChart))
   {
     stdid_temp_2 = DataChart$stdid[j];
     if(!is.na(stdid_temp_2) && (stdid_temp_2 == stdid_temp))
     {
-      lowest_time_d$times[i] = lowest_time_d$times[i] + 1;
+      lowest_list$times[i] = lowest_list$times[i] + 1;
     }
   }
 }
 print("Time submit of students having at least 1 lowest score submit");
-print(lowest_time_d);
+print(lowest_list);
+lowest_list$times = as.integer(lowest_list$times)
+print(class(lowest_list$times))
+hist(lowest_list$times,
+     main = "Submission times spectral lowest score student",
+     xlab = "Submission times")
 
 #2.e) Get the lowest student final score
+print("2.e)")
 DataChart = subset(DataChart, !(is.na(stdid)) );
 stdid_list_e = DataChart;
 
 stdid_list_e_stdid = stdid_list_e$stdid;
 stdid_list_e_stdid = unique(stdid_list_e_stdid, incomparables = FALSE)
 
-final_score_chart_e = data.frame(
+final_score_chart = data.frame(
   "stdid" = stdid_list_e_stdid,
   "final_score" = c(0)
 )
 
-print("Final Score Chart stdid");
-#print(final_score_chart_e$stdid);
-
-for(i in 1:nrow(final_score_chart_e))
+for(i in 1:nrow(final_score_chart))
 {
   for(j in 1:nrow(DataChart))
   {
-    if(DataChart$stdid[j] == final_score_chart_e$stdid[i])
+    if(DataChart$stdid[j] == final_score_chart$stdid[i])
     {
-      if(DataChart$total_score[j] > final_score_chart_e$final_score[i])
+      if(DataChart$total_score[j] > final_score_chart$final_score[i])
       {
-        final_score_chart_e$final_score[i] = DataChart$total_score[j];
+        final_score_chart$final_score[i] = DataChart$total_score[j];
       }
     }
   }
 }
-print("Final Score Chart stdid and final_score");
-print(final_score_chart_e);
-
+#print(final_score_chart);
 print("Lowest Final score")
-print(min(final_score_chart_e$final_score));
-lowest_final_score_e = min(final_score_chart_e$final_score)
+print(min(final_score_chart$final_score));
+lowest_final_score_e = min(final_score_chart$final_score)
 
 #2.f) List of student with lowest final score
-lowest_final_list = subset(final_score_chart_e, final_score == lowest_final_score_e);
+print("2.f)")
+lowest_final_list = subset(final_score_chart, final_score == lowest_final_score_e);
 print("List of student with lowest final score")
 print(lowest_final_list$stdid);
 
 #2.g) Spectral of submit time from students of lowest final score
+print("2.g)")
 lowest_final_list$times = c(0)
 for (i in 1:nrow(lowest_final_list))
 {
@@ -164,20 +128,27 @@ for (i in 1:nrow(lowest_final_list))
 }
 print("List of student with lowest final score and submit time")
 print(lowest_final_list);
+lowest_final_list$times = as.integer(lowest_final_list$times)
+hist(lowest_final_list$times,
+     main = "Submission times spectral of student having lowest final score",
+     xlab = "Submission times");
 
 #2.h) Find Highest_score
-highest_score_h = max(DataChart$total_score)
-print("Highest Final Score");
-print(highest_score_h);
+print("2.h)")
+highest_score = max(DataChart$total_score)
+print("Highest Score");
+print(highest_score);
 
 #2.i) List of students with at least 1 highest score
-highest_chart_i = subset(DataChart, total_score == highest_score_h)
+print("2.i)")
+highest_chart = subset(final_score_chart, final_score == highest_score)
 print("stdid List of student with atleast one highest_score");
-print(nrow(highest_chart_i$stdid));
+print(highest_chart$stdid);
 
-#2.j) Spectral of submit time from students of final lowest score
+#2.j) Spectral of submit time from students have at least a highest score submit
+print("2.j)")
 highest_final_score_chart = data.frame(
-  "stdid" = highest_chart_i$stdid,
+  "stdid" = highest_chart$stdid,
   "times" = c(0)
 )
 
@@ -194,76 +165,101 @@ for (i in 1:nrow(highest_final_score_chart))
   }
 }
 print("Highest final score chart and submit times");
-#print(highest_final_score_chart);
+print(highest_final_score_chart);
+hist(highest_final_score_chart$times,
+     main = "Submission times spectral of highest score students",
+     xlab = "Submission times")
+
 #2.k)
+print("2.k)")
+highest_score = max(DataChart$total_score)
+print("Highest Final Score");
+print(highest_score);
 
 #2.l)
+print("2.l)")
+print("stdid List of student with atleast one highest_score");
+print(highest_chart$stdid);
 
 #2.m)
+print("2.m)")
+print("Highest final score chart and submit times");
+print(highest_final_score_chart);
+hist(highest_final_score_chart$times,
+     main = "Submission times spectral of final highest score students",
+     xlab = "Submission times")
 
-#2.n) Caculate average final_score of each student
-average_final_score_all_student = sum(final_score_chart_e$final_score) / nrow(final_score_chart_e);
+#2.n) Caculate average final_score of all student
+print("2.n)")
+average_final_score_all_student = sum(final_score_chart$final_score) / nrow(final_score_chart);
+average_final_score_all_student = round(average_final_score_all_student * 10) / 10;
 print("average_final_score_all_student")
 print(average_final_score_all_student)
-final_score_chart_e$average_score = c(0)
-final_score_chart_e$times = c(0)
-for (i in 1:nrow(final_score_chart_e))
+
+final_score_chart$average_score = c(0)
+final_score_chart$times = c(0)
+for (i in 1:nrow(final_score_chart))
 {
-  stdid_temp = final_score_chart_e$stdid[i];
+  stdid_temp = final_score_chart$stdid[i];
   for(j in 1:nrow(DataChart))
   {
     stdid_temp_2 = DataChart$stdid[j];
     if(!is.na(stdid_temp_2) && (stdid_temp_2 == stdid_temp))
     {
-      final_score_chart_e$average_score[i] = final_score_chart_e$average_score[i] * final_score_chart_e$times[i] + DataChart$total_score[j]
-      final_score_chart_e$times[i] = final_score_chart_e$times[i] + 1
-      final_score_chart_e$average_score[i] = final_score_chart_e$average_score[i] / final_score_chart_e$times[i]
+      final_score_chart$average_score[i] = final_score_chart$average_score[i] * final_score_chart$times[i] + DataChart$total_score[j]
+      final_score_chart$times[i] = final_score_chart$times[i] + 1
+      final_score_chart$average_score[i] = final_score_chart$average_score[i] / final_score_chart$times[i]
     }
   }
 }
-print("Final score list with average score")
-#print(final_score_chart_e);
+
+#average_final_list = subset(final_score_chart, final_score == average_final_score_all_student)
+#print("Final score list with average score")
+#print(average_final_list);
 
 #2.o) Number of student have a average final score
-score_match_average_list = subset(final_score_chart_e, final_score == average_final_score_all_student)
+print("2.o)")
+score_match_average_list = subset(final_score_chart, final_score == average_final_score_all_student)
 print("Number of student have a average final score")
 print(nrow(score_match_average_list))
 
 #2.p) Median, Max, Min
-Median_final_score = median(final_score_chart_e$final_score)
+print("2.p)")
+Median_final_score = median(final_score_chart$final_score)
 print("Median average score");
 print(Median_final_score);
 
-Max_final_score = max(final_score_chart_e$final_score)
+Max_final_score = max(final_score_chart$final_score)
 print("Max average score");
 print(Max_final_score);
 
-Min_final_score = min(final_score_chart_e$final_score)
+Min_final_score = min(final_score_chart$final_score)
 print("Min average score");
 print(Min_final_score);
 
 #2.q)Range, Variance, Standard Deviation
-range_final = range(final_score_chart_e$final_score)
+print("2.q)")
+range_final = range(final_score_chart$final_score)
 print("Range of average score");
-print(range_final);
 range_final_value = range_final[2] - range_final[1]
+print(range_final_value)
 
 #Probability of Distribution Average score
 probability_chart = data.frame(
   "score" = NULL,
   "times" = NULL
 )
-for(i in 1:nrow(final_score_chart_e))
+for(i in 1:nrow(final_score_chart))
 {
-  if(final_score_chart_e$final_score[i] %in% probability_chart$score)
+  if(final_score_chart$final_score[i] %in% probability_chart$score)
   {
-    index = which(probability_chart$score == final_score_chart_e$final_score[i])
+    index = which(probability_chart$score == final_score_chart$final_score[i])
     probability_chart$times[index] = probability_chart$times[index] + 1
   }
   else 
   {
     temp_chart = data.frame(
-    "score" = c(final_score_chart_e$final_score[i]),
+    "score" = c(final_score_chart$final_score[i]),
     "times" = 1
     )
     probability_chart = rbind(probability_chart,temp_chart)
@@ -271,54 +267,70 @@ for(i in 1:nrow(final_score_chart_e))
 }
 
 result_chart = probability_chart
-probability_chart$times = probability_chart$times / nrow(final_score_chart_e)
+probability_chart$times = probability_chart$times / nrow(final_score_chart)
 probability_chart = probability_chart[order(-result_chart$score),]
 
-print("probablility of distribution")
-print(probability_chart);
+#print("probablility of distribution")
+#print(probability_chart);
 
-variance_final_score = var(final_score_chart_e$final_score)
-standard_deviation_final_score = sd(final_score_chart_e$final_score)
+variance_final_score = var(final_score_chart$final_score)
+standard_deviation_final_score = sd(final_score_chart$final_score)
 print("Variance average score")
 print(variance_final_score)
 print("Standard Deviation average score")
 print(standard_deviation_final_score)
 
 #2.r)Skewness and Kurtosis of Average Score
+print("2.r)")
 print("Skewness Average Score")
-print(skewness(final_score_chart_e$final_score))
+print(skewness(final_score_chart$final_score))
 print("Kurtosis Average Score")
-print(kurtosis(final_score_chart_e$final_score))
+print(kurtosis(final_score_chart$final_score))
 
 #2.s)Quantile 1st and 3rd
+print("2.s)")
 print("Quantile")
-quantile(final_score_chart_e$final_score)
+quantile(final_score_chart$final_score, 0.25)
+quantile(final_score_chart$final_score, 0.75)
 
 #2.t)
+print("2.t)")
 print("result_chart")
 result_chart = result_chart[order(-result_chart$score), ,drop = FALSE]
 print(result_chart$times[1] + result_chart$times[2])
 
 #2.u)
-final_score_chart_e_first = subset(final_score_chart_e, final_score == result_chart$score[1])
-final_score_chart_e_second = subset(final_score_chart_e, final_score == result_chart$score[2])
-final_score_chart_e_first_second = rbind(final_score_chart_e_first, final_score_chart_e_second)
-final_score_chart_e_first_second = final_score_chart_e_first_second
+print("2.u)")
+final_score_chart_first = subset(final_score_chart, final_score == result_chart$score[1])
+final_score_chart_second = subset(final_score_chart, final_score == result_chart$score[2])
+final_score_chart_first_second = rbind(final_score_chart_first, final_score_chart_second)
+print(final_score_chart_first_second)
+hist(final_score_chart_first_second$times,
+     main = "Submission times spectral two highest final score students",
+     xlab = "Submission times")
+
 #2.v)
+print("2.v)")
 print(result_chart)
+hist(final_score_chart$final_score)
 
 #2.w)
+print("2.w)")
 result_chart$total_submit = c(0)
 for(i in 1:nrow(result_chart))
 {
-  for(j in 1:nrow(final_score_chart_e))
+  for(j in 1:nrow(final_score_chart))
   {
-    if(result_chart$score[i] == final_score_chart_e$final_score[j])
+    if(result_chart$score[i] == final_score_chart$final_score[j])
     {
-      result_chart$total_submit[i] = result_chart$total_submit[i] + final_score_chart_e$times[j]
+      result_chart$total_submit[i] = result_chart$total_submit[i] + final_score_chart$times[j]
     }
   }
 }
-
-print(sum(final_score_chart_e$times))
 print(result_chart)
+print(sum(final_score_chart$times))
+hist(final_score_chart$times)
+
+#1)Number of Students
+print(nrow(final_score_chart))
+
