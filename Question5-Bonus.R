@@ -129,7 +129,6 @@ hard_working_student_with_many_sub = function(data) {
 
 Question10 = function(data) {
     active_student <- union(hard_working_student_with_many_sub(data)$stdid, smart_student(data)$stdid);
-    active_student <- hard_working_student_with_many_sub(data) %>% pull(stdid);
     active_student <- data %>% filter(stdid %in% active_student) %>% group_by(stdid) %>% slice_max(total_score, n = 1);
 
     # b
@@ -142,13 +141,7 @@ Question10 = function(data) {
 }
 
 # QUESTION 11
-Question11 = function(data) {
-    all_type <- intersect(hard_working_student(data)$stdid, dealing_student(data)$stdid);
-    all_type <- intersect(all_type, good_student(data)$stdid);
-    all_type <- intersect(all_type, smart_student(data)$stdid);
-
-    print("danh sach sinh vien la sinh vien cham chi, gioi, thong minh, doi pho");
-    print(all_type);    
+Question11 = function(data) { 
 }
 
 # READ DATA
@@ -164,27 +157,3 @@ arrange(data, desc(time_begin));
 
 Question5(data);
 Question10(data);
-
-
-# ## QUESTION 5
-# Read the data from xlsx file, filter out students who did not submit any submisson and convert some 
-# data field to their type.
-# The matrix score (it is acutally a tibble) save the maximum score after a number of submissions. 
-# The formula is:
-#     score[i, j] = the maximum score of student i after j submissions.
-#     score[i, j] = max(score[i, j - 1], the score of the j-th submission).
-#     if there is no j-th submission, the score of j-th submission is set to 0.
-
-# average_score[j] = average of score of all students after j submission.
-# average_score[j] = mean(average[i, j]) with i is all student.
-
-# Plot 3 graph:
-#     -the scores of all students after sixth submission.
-#     -the scores of all students after third submission.
-#     -the average score after the maximun number of submissions.
-
-# the final score of all student is the maximum score of all that student's submission.
-# The final average score is the average of the final score of all students, which is average_score[maximum number of submission]
-
-## QUESTION 10
-print
