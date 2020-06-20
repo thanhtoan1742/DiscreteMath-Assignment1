@@ -5,7 +5,7 @@ library(e1071);
 
 #Read the Excel file
 data = data.frame();
-data = read.xlsx("E:/DiscreteMath-Assignment1-master/Data/4.xlsx", sheetIndex = 1);
+data = read.xlsx("E:/DiscreteMath-Assignment1-master/Data/1.xlsx", sheetIndex = 1);
 namesList = c("Maso", "Tinhtrang", "BatDau", "HoanThanh", "Thoigian", "Diem/10,00", "Q. 1 /1,00", "Q. 2 /1,00", "Q. 3 /1,00", "Q. 4 /1,00", "Q. 5 /1,00", "Q. 6 /1,00", "Q. 7 /1,00", "Q. 8 /1,00", "Q. 9 /1,00", "Q. 10 /1,00");
 Encoding(namesList) = "UTF-8";
 names(data) = namesList;
@@ -19,19 +19,21 @@ data$'BatDau' <- strptime(data$'BatDau', format = "%d %B %Y  %I:%M %p")
 data$'HoanThanh' <- strptime(data$'HoanThanh', format = "%d %B %Y  %I:%M %p")
 data$'Diem/10,00' <- suppressWarnings(as.numeric(sub(",", ".",data$'Diem/10,00', fixed = TRUE)))
 data$'Maso' <- as.integer(data$Maso);
+data <- data %>% filter(data$HoanThanh >= min(data$HoanThanh,na.rm = TRUE));
 
 tgdata <- data %>% group_by(Maso) %>% transmute(Cachnhau = max(HoanThanh)-min(HoanThanh)) %>% ungroup(); 
 landata <- data %>% group_by(Maso) %>% transmute(n = n()) %>% ungroup();
 
 #a
-adata <- tgdata[!duplicated(tgdata$'Maso'),]
-NDadata <- adata %>% mutate(No = 1:nrow(adata))
-write.csv(NDadata,file='A2.csv')
-print(NDadata);
+NDtgdata <- tgdata[!duplicated(tgdata$'Maso'),]
+adata <- NDtgdata
+rm(NDtgdata)
+write.csv(adata,file='A.csv')
+print(adata);
 
 
 #b
-rangetime <- as.vector(NDadata %>% count(Cachnhau));
+rangetime <- as.vector(adata %>% count(Cachnhau));
 rangetime <- rangetime%>% filter(rangetime$Cachnhau >= min(rangetime$Cachnhau,na.rm = TRUE));
 print(rangetime);
 y = max(rangetime$n);
@@ -44,14 +46,17 @@ tsdata <- tgdata %>% mutate(f = tgdata$Cachnhau/landata$n);
 NDtsdata <- tsdata%>% mutate('Diem' = data$'Diem/10,00');
 NDtsdata <- NDtsdata[!duplicated(tgdata$'Maso'),]
 NDtsdata <- NDtsdata[,-2];
-write.csv(NDtsdata,file='C4.csv')
+NDtsdata <- NDtsdata %>% filter(NDtsdata$f >= min(NDtsdata$f,na.rm = TRUE));
+rm(tsdata)
+write.csv(NDtsdata,file='C.csv')
 print(NDtsdata);
 
 #d
 lowtsdata <- NDtsdata %>% filter(NDtsdata$f == min(NDtsdata$f,na.rm = TRUE));
 ltsddata <- lowtsdata[,-2];
 dtsdata <- ltsddata[,-2];
-write.csv(dtsdata,file='D4.csv')
+rm(lowtsdata)
+write.csv(dtsdata,file='D.csv')
 print(dtsdata);
 
 #e
@@ -77,6 +82,7 @@ barplot(hightime$n,xlab = 'Diem cua cac sinh vien nop it nhat',ylab = 'So sinh v
 nohightsdata <- NDtsdata %>% filter(NDtsdata$f != max(NDtsdata$f,na.rm = TRUE));
 a = max(nohightsdata$f);
 secondhightsdata <- nohightsdata %>% filter(nohightsdata$f == max(nohightsdata$f,na.rm = TRUE));
+rm(nohightsdata)
 print(secondhightsdata);
 
 #j
@@ -84,14 +90,31 @@ fshightsdata <- NDtsdata %>% filter(NDtsdata$f >= a);
 print(fshightsdata);
 
 #k
-tbtimedata <- data %>% group_by(Maso) %>% transmute(TrungBinh = (max(HoanThanh)-min(HoanThanh))/2) %>% ungroup()
-tbtimedata <- tbtimedata %>% filter(tbtimedata$TrungBinh >= min(tbtimedata$TrungBinh,na.rm = TRUE))
-write.csv(tbtimedata,file='K2.csv')
-print(tbtimedata);
+kdata <- as.data.frame(data[,1]);
+colnames(kdata)[1] <- 'Maso'
+kdata <- kdata %>% mutate('Hoanthanh' = data$HoanThanh);
+kdata <- kdata %>% mutate('Lan' = landata$n);
+#Split data
+ykdata <- kdata %>% filter(kdata$Lan > 1);
+nkdata <- kdata %>% filter(kdata$Lan == 1);
+#Deal with 1 submit
+nkdata <- as.data.frame(nkdata[,1])
+colnames(nkdata)[1] <- 'Maso';
+nkdata <- nkdata %>% mutate(ThoigianTB = 0);
+#Deal with 2 submit
+firstsubmit <- ykdata %>% group_by(Maso) %>% transmute(MaxThoigian = max(Hoanthanh)) %>% ungroup();
+timedata <- firstsubmit %>% mutate('Thoigian' = firstsubmit$MaxThoigian-ykdata$Hoanthanh);
+timedata <- timedata %>% filter(Thoigian > 0);
+timedata <- timedata[,-2]
+timedata <- timedata %>% group_by(Maso) %>% transmute(ThoigianTB = min(Thoigian)/2) %>% ungroup();
+timedata <- as.data.frame(timedata[!duplicated(timedata$'Maso'),])
+kdata <- rbind(timedata,nkdata)
+write.csv(kdata,file='K.csv')
+print(kdata)
 
 #l
-freq <- as.data.frame(tbtimedata %>% count(TrungBinh));
-freq <- freq%>% mutate('Tansuat' = freq$n/nrow(tbtimedata));
+freq <- as.data.frame(NDtsdata %>% count(f));
+freq <- freq%>% mutate('Tansuat' = freq$n/nrow(NDtsdata));
 colnames(freq)[colnames(freq) == 'n'] <- 'TanSo';
 cumfreq <- 1:nrow(freq)
 cumfreq[1] <- freq$Tansuat[1];
@@ -105,13 +128,13 @@ print(freq);
 barplot(freq$TanSo,xlab = 'Trung binh thoi gian cua sinh vien',ylab = 'Tan so', ylim = c(0,max(freq$TanSo)+100),names.arg = freq$TrungBinh);
 
 #n
-pie(freq$Tansuat,freq$TrungBinh,col = rainbow(nrow(freq)),radius = 1,main='Tan suat')
+pie(freq$Tansuat,freq$f,col = rainbow(nrow(freq)),radius = 1,main='Tan suat')
 
 #o
 barplot(freq$TanSuatTichLuy,xlab = 'Trung binh thoi gian cua sinh vien',ylab = 'Tan suat tich luy', ylim = c(0,max(freq$TanSuatTichLuy)),names.arg = freq$TrungBinh);
 
 #p
-tgtsdata <- NDtsdata %>% mutate('Cachnhau' = NDadata$'Cachnhau');
+tgtsdata <- NDtsdata %>% mutate('Cachnhau' = adata$'Cachnhau');
 tgtsdata <- tgtsdata[,-3];
 tgtsdata <- tgtsdata%>% filter(tgtsdata$f >= min(tgtsdata$f,na.rm = TRUE));
 tgtsdata$f <- as.numeric(tgtsdata$f)
@@ -143,9 +166,5 @@ quantile(tgtsdata$f, c(0.25 ,0.75), type = 1)
 detach("package:dplyr", unload = TRUE) ;
 detach("package:xlsx", unload = TRUE) ;
 detach("package:ggplot2", unload = TRUE) ;
-detach("package:lubridate", unload = TRUE) ;
+detach("package:e1071", unload = TRUE) ;
 
-#Clear stuff
-rm(list = ls()) #Environment
-dev.off();
-cat("\014") #Console
