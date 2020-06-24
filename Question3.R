@@ -5,7 +5,7 @@ library(xlsx);
 library(e1071);
 
 # read data
-data <- read.xlsx("1.xlsx", sheetIndex = 1, encoding = "UTF-8", colIndex = 1:16);
+data <- read.xlsx("4.xlsx", sheetIndex = 1, encoding = "UTF-8", colIndex = 1:16);
 data <- head(data, -1);
 namesList <- c("stdid", "stat", "time_begin", "time_end", "time_duration", "total_score", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10")
 names(data) <- namesList;
@@ -34,8 +34,12 @@ print(list1[ ,1],n=nrow(list1));
 print("in pho diem sinh vien co so lan nop it nhat");
 #dung lenh filter loc danh sach sv so lan nop it nhat
 least_nob_list  = data %>% filter(size == min_number_of_submission);
-#in ra danh sach nhung sv co so lan nop it nhat, bo di nhung cot ko lien quan den diem la cot 2,3,4,5
-print(least_nob_list[, c(-2, -3, -4, -5)], width = Inf,n=nrow(least_nob_list));
+#dung ggplot de in ra pho diem can in
+least_nob_list = least_nob_list %>% filter(total_score >= 0) %>% group_by(total_score);
+point_list1 = summarise(least_nob_list, "size" = n());
+least_nob_list = mutate(least_nob_list, "size" = n());
+ggplot(data=point_list1)+
+geom_col(mapping=aes(y=size,x=total_score));
 
 #d so luong sinh vien co so lan nop nhieu nhat
 print("so luong sinh vien co so lan nop nhieu nhat");
@@ -54,8 +58,12 @@ print(list2[ ,1],n=nrow(list2));
 print("in pho diem sinh vien co so lan nop nhieu nhat");
 #dung lenh filter loc danh sach sv so lan nop nhieu nhat
 most_nob_list  = data %>% filter(size == max_number_of_submission);
-#in ra danh sach nhung sv co so lan nop it nhat, bo di nhung cot ko lien quan den diem la cot 2,3,4,5
-print(most_nob_list[, c(-2, -3, -4, -5)], width = Inf,n=nrow(most_nob_list));
+#dung ggplot de in ra pho diem can in
+most_nob_list = most_nob_list %>% filter(total_score >= 0) %>% group_by(total_score);
+point_list2 = summarise(most_nob_list, "size" = n());
+least_nob_list = mutate(most_nob_list, "size" = n());
+ggplot(data=point_list2)+
+geom_col(mapping=aes(y=size,x=total_score));
 
 #g so lan nop trung binh
 print("so lan nop trung binh");
@@ -77,8 +85,12 @@ print(count);
 print("in pho diem sinh vien co so lan nop trung binh");
 #dung lenh filter de loc pho diem sv so lan nop trung binh
 mean_nob_list  = data %>% filter(size == round(mean(size_list$size),0));
-#in ra danh sach nhung sv co so lan nop trung binh, bo di nhung cot ko lien quan den diem la cot 2,3,4,5
-print(mean_nob_list[, c(-2, -3, -4, -5)], width = Inf,n=nrow(mean_nob_list));
+#dung ggplot de in ra pho diem can in
+mean_nob_list = most_nob_list %>% filter(total_score >= 0) %>% group_by(total_score);
+point_list3 = summarise(mean_nob_list, "size" = n());
+mean_nob_list = mutate(mean_nob_list, "size" = n());
+ggplot(data=point_list3)+
+geom_col(mapping=aes(y=size,x=total_score));
 
 #j trung vi, cuc dai, cuc tieu
 print("trung vi, cuc dai, cuc tieu");
@@ -155,8 +167,15 @@ most_nob_list  = data %>% filter(size == max_number_of_submission);
 most2_nob_list  = data %>% filter(size == max2_number_of_submission);
 #dung lenh union de ket hop 2 cai nhieu nhat va nhieu nhi lai
 union2=union(most_nob_list,most2_nob_list);
-#in ra danh sach nhung sv co so lan nop nhieu nhat hoac nhi, bo di nhung cot ko lien quan den diem la cot 2,3,4,5
-print(union2[, c(-2, -3, -4, -5)], width = Inf, n=nrow(union2));
+#dung ggplot de in ra pho diem can in
+
+union2 = union2 %>% filter(total_score >= 0) %>% group_by(total_score);
+
+point_list5 = summarise(union2, "size" = n());
+union2 = mutate(union2, "size" = n());
+ggplot(data=point_list5)+
+geom_col(mapping=aes(y=size,x=total_score));
+
 
 #r 1/3 danh sach sc nop bai nhieu nhat
 print("1/3 danh sach sc nop bai nhieu nhat");
@@ -177,8 +196,12 @@ print("so luong sv nop bai nhieu nhat");
 one_third2 <- df %>% slice_max(size, n=m);
 #truyen toan bo du lieu cua 1/3 thang do vao one_third2
 one_third2 <- data %>% filter(stdid %in% one_third2$stdid);
-#in one_third2 gom danh sach nhung thang thoa yeu cau, bo di nhung cot ko lien quan diem so la 2,3,4,5
-print(one_third2[, c(-2, -3, -4, -5)], width = Inf,n=nrow(one_third2));
+#dung ggplot de in ra pho diem can in
+one_third2 = one_third2 %>% filter(total_score >= 0) %>% group_by(total_score);
+point_list6 = summarise(one_third2, "size" = n());
+one_third2 = mutate(one_third2, "size" = n());
+ggplot(data=point_list6)+
+geom_col(mapping=aes(y=size,x=total_score));
 
 #u pho diem voi k cho truoc
 print("pho diem voi k cho truoc");
@@ -188,5 +211,9 @@ k_score <- size_list %>% group_by(size) %>% summarise() %>% slice_max(size, n = 
 k_group <- size_list %>% filter(size %in% k_score$size);
 #truyen toan bo du lieu nhung thang o k nhom dau vao k_group
 k_group <- data %>% filter(stdid %in% k_group$stdid);
-#in k_group2 gom danh sach nhung thang thoa yeu cau, bo di nhung cot ko lien quan diem so la 2,3,4,5
-print(k_group[, c(-2, -3, -4, -5)], width = Inf,n=nrow(k_group));
+#dung ggplot de in ra pho diem can in
+k_group = k_group %>% filter(total_score >= 0) %>% group_by(total_score);
+point_list7 = summarise(k_group, "size" = n());
+one_third2 = mutate(k_group, "size" = n());
+ggplot(data=point_list7)+
+geom_col(mapping=aes(y=size,x=total_score));
