@@ -1,6 +1,7 @@
 options(encoding = "UTF-8");
 library(utf8);
 library(tidyverse);
+library(readxl);
 library(xlsx);
 
 MD = 7241;
@@ -18,7 +19,7 @@ to_number = function(a) {
 }
 
 print_score_detail = function(data) {
-    print(data[, c(1, 6:16)], n = nrow(data), width = Inf);
+    write_tsv(data[, c(1, 6:16)], path = "output.tsv", col_names = FALSE);
 }
 
 hard_working_student = function(data) {
@@ -136,7 +137,6 @@ Question10 = function(data) {
     print(nrow(active_student));
 
     # c
-    print("pho diem hoc sinh chu dong");
     print_score_detail(active_student);
 }
 
@@ -145,15 +145,15 @@ Question11 = function(data) {
 }
 
 # READ DATA
-data <- read.xlsx(filename, sheetIndex = 1, encoding = "UTF-8", colIndex = 1:16);
+data <- read_excel(filename, sheet = 1);
 data <- head(data, -1);
-namesList <- c("stdid", "stat", "time_begin", "time_end", "time_duration", "total_score", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10")
+namesList <- c("stdid", "stat", "time_begin", "time_end", "time_duration", "total_score", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10");
 names(data) <- namesList;
 row.names(data) <- NULL;
 data <- as_tibble(data) %>% filter(total_score >= 0);
 data$time_begin <- strptime(data$time_begin, format = "%d %B %Y  %I:%M %p");
 data$total_score <- to_number(data$total_score);
-arrange(data, desc(time_begin));
+data <- arrange(data, desc(time_begin));
 
 Question5(data);
 Question10(data);
