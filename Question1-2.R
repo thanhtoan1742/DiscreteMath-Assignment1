@@ -5,11 +5,11 @@ library(readxl);
 library(e1071);
 
 file_in = "Data\\1.xlsx";
-file_out = "1.tsv";
+file_out = "Result\\1.tsv";
 tid = 6;
 
 reset_file_out = function() {
-  write_tsv(as_tibble("tid: 6"), path = file_out, append = FALSE, col_names = FALSE);
+  write_tsv(as_tibble(paste("tid:", as.character(tid))), path = file_out, append = FALSE, col_names = FALSE);
 }
 
 write_data = function(data) {
