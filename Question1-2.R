@@ -1,8 +1,27 @@
 options(encoding = "UTF-8");
 library(utf8);
 library(tidyverse);
-library(xlsx);
+library(readxl);
 library(e1071);
+
+file_in = "Data\\1.xlsx";
+file_out = "1.tsv";
+tid = 6;
+
+reset_file_out = function() {
+  write_tsv(as_tibble("tid: 6"), path = file_out, append = FALSE, col_names = FALSE);
+}
+
+write_data = function(data) {
+  print_col_names = TRUE;
+  if (is.character(data) | is.numeric(data) | is.vector(data))
+    print_col_names = FALSE;
+
+  if (is.character(data))
+    Encoding(data) = "UTF-8";
+  data <- as_tibble(data);
+  write_tsv(data, path = file_out, append = TRUE, col_names = print_col_names);
+}
 
 sum_all = function(data_col,data_size) {
   all_score = 0
@@ -14,12 +33,21 @@ sum_all = function(data_col,data_size) {
 }
 
 #Get data
-DataChart = xlsx::read.xlsx("Data\\4.xlsx", sheetIndex = 1, stringsAsFactors = FALSE)
-colnames(DataChart) = c("stdid", "stat", "time_begin", "time_end", "time_duration", "total_score", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10")
+DataChart <- read_excel(file_in, sheet = 1);
+Data <- head(data, -1);
+namesList <- c("stdid", "stat", "time_begin", "time_end", "time_duration", "total_score", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10");
+names(DataChart) <- namesList;
+row.names(DataChart) <- NULL;
+reset_file_out();
+
+#Question 1
+write_data("Câu 1");
+write_data("Số sinh viên trong danh sách là:");
+write_data(n_distinct(DataChart$stdid));
 
 #Question 2
-# 2.a) Total Score List
-print("2.a)")
+# 2.a Total Score List
+write_data("Câu 2");
 for(i in 1:nrow(DataChart))
 {
   if(DataChart$total_score[i] == "-")
@@ -32,27 +60,25 @@ DataChart$total_score = gsub(",",".",DataChart$total_score);
 DataChart$total_score = as.numeric(DataChart$total_score);
 DataChart = subset(DataChart, total_score >= 0)
 total_score_list = DataChart$total_score
-print(total_score_list)
+write_data("a. Tổng số điểm của tất cả các bài nộp:");
+write_data(sum(total_score_list));
 
-# 2.b) Finding lowest-score
-print("2.b)")
+# 2.b Finding lowest-score
+write_data("b. Điểm thấp nhất:");
 lowest_score = min(DataChart$total_score);
-print("lowest score");
-print(lowest_score);
+write_data(lowest_score);
 
-print("2.c)")
 # 2.c) List of student with lowest-score
 lowest_list = subset(DataChart, total_score == lowest_score);
 lowest_list = lowest_list$stdid;
 unique(lowest_list, incomparables = FALSE)
-print("list student have a lowest score submit");
+write_data("c. Danh sách sinh viên có bài nộp điểm thấp nhất:");
 lowest_list = data.frame(
   "stdid" = lowest_list
 )
-print(lowest_list$stdid);
+write_data(lowest_list$stdid);
 
-# 2.d) Spectral of submit time from students of lowest score
-print("2.d)")
+# 2.d Spectral of submit time from students of lowest score
 lowest_list$times = c(0)
 for (i in 1:nrow(lowest_list))
 {
@@ -66,14 +92,13 @@ for (i in 1:nrow(lowest_list))
     }
   }
 }
-print("Time submit of students having at least 1 lowest score submit");
-print(lowest_list);
+write_data("d. Phổ theo số lần nộp của các sinh viên có ít nhất một nộp đạt điểm thấp nhất:");
 lowest_list$times = as.integer(lowest_list$times)
-print(class(lowest_list$times))
 lowest_list_plot = data.frame(
   "times" = unique(lowest_list$times),
   "frequency" = c(0)
 )
+
 for(i in 1:nrow(lowest_list_plot))
 {
   for(j in 1:nrow(lowest_list))
@@ -82,11 +107,11 @@ for(i in 1:nrow(lowest_list_plot))
     lowest_list_plot$frequency[i] = lowest_list_plot$frequency[i] + 1
   }
 }
-print(lowest_list_plot)
+write_data(lowest_list_plot);
 barplot(lowest_list_plot$frequency,ylim = c(0,10),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = lowest_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem thap nhat");
 
 #2.e) Get the lowest student final score
-print("2.e)")
+write_data("e. Điểm tổng kết thấp nhất:");
 DataChart = subset(DataChart, !(is.na(stdid)) );
 stdid_list_e = DataChart;
 
@@ -112,18 +137,16 @@ for(i in 1:nrow(final_score_chart))
   }
 }
 #print(final_score_chart);
-print("Lowest Final score")
-print(min(final_score_chart$final_score));
+write_data(min(final_score_chart$final_score));
 lowest_final_score_e = min(final_score_chart$final_score)
 
 #2.f) List of student with lowest final score
-print("2.f)")
+write_data("f. Danh sách sinh viên có điểm tổng kết thấp nhất:")
 lowest_final_list = subset(final_score_chart, final_score == lowest_final_score_e);
-print("List of student with lowest final score")
-print(lowest_final_list$stdid);
+write_data(lowest_final_list$stdid);
 
 #2.g) Spectral of submit time from students of lowest final score
-print("2.g)")
+write_data("g. Phổ theo số lần nộp của các sinh viên có điểm tổng kết thấp nhất:")
 lowest_final_list$times = c(0)
 for (i in 1:nrow(lowest_final_list))
 {
@@ -137,8 +160,6 @@ for (i in 1:nrow(lowest_final_list))
     }
   }
 }
-print("List of student with lowest final score and submit time")
-print(lowest_final_list);
 lowest_final_list$times = as.integer(lowest_final_list$times)
 lowest_final_list_plot = data.frame(
   "times" = unique(lowest_final_list$times),
@@ -152,23 +173,21 @@ for(i in 1:nrow(lowest_final_list_plot))
       lowest_final_list_plot$frequency[i] = lowest_final_list_plot$frequency[i] + 1
     }
 }
-print(lowest_final_list_plot)
+write_data(lowest_final_list_plot);
 barplot(lowest_final_list_plot$frequency,ylim = c(0,10),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = lowest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem tong ket thap nhat");
 
 #2.h) Find Highest_score
-print("2.h)")
+write_data("h. Điểm cao nhất:")
 highest_score = max(DataChart$total_score)
-print("Highest Score");
-print(highest_score);
+write_data(highest_score);
 
 #2.i) List of students with at least 1 highest score
-print("2.i)")
+write_data("i. Danh sách sinh viên có bài nộp đạt điểm cao nhất:");
 highest_chart = subset(final_score_chart, final_score == highest_score)
-print("stdid List of student with atleast one highest_score");
-print(highest_chart$stdid);
+write_data(highest_chart$stdid);
 
 #2.j) Spectral of submit time from students have at least a highest score submit
-print("2.j)")
+write_data("j. Phổ theo số lần nộp của các sinh viên có bài nộp đạt điểm cao nhất:")
 highest_final_list = data.frame(
   "stdid" = highest_chart$stdid,
   "times" = c(0)
@@ -185,8 +204,6 @@ for (i in 1:nrow(highest_final_list))
     }
   }
 }
-print("Highest final score chart and submit times");
-print(highest_final_list);
 highest_final_list_plot = data.frame(
   "times" = unique(highest_final_list$times),
   "frequency" = c(0)
@@ -199,32 +216,28 @@ for(i in 1:nrow(highest_final_list_plot))
       highest_final_list_plot$frequency[i] = highest_final_list_plot$frequency[i] + 1
     }
 }
-print(highest_final_list_plot)
+write_data(highest_final_list_plot);
 barplot(highest_final_list_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = highest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem cao nhat");
 
 #2.k)
-print("2.k)")
+write_data("k. Điểm tổng kết cao nhất:")
 highest_score = max(DataChart$total_score)
-print("Highest Final Score");
-print(highest_score);
+write_data(highest_score);
 
 #2.l)
-print("2.l)")
-print("stdid List of student with atleast one highest_score");
-print(highest_chart$stdid);
+write_data("l. Danh sách sinh viên có điểm tổng kết cao nhất:");
+write_data(highest_chart$stdid);
 
 #2.m)
-print("2.m)")
-print("Highest final score chart and submit times");
-print(highest_final_list)
+write_data("m. Phổ theo số lần nộp của các sinh viên có điểm tổng kết cao nhất:");
+write_data(highest_final_list);
 barplot(highest_final_list_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = highest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co diem tong ket cao nhat");
 
 #2.n) Caculate average final_score of all student
-print("2.n)")
+write_data("n. Điêm số tổng kết trung bình:");
 average_final_score_all_student = sum(final_score_chart$final_score) / nrow(final_score_chart);
 average_final_score_all_student = round(average_final_score_all_student * 10) / 10;
-print("average_final_score_all_student")
-print(average_final_score_all_student)
+write_data(average_final_score_all_student);
 
 final_score_chart$average_score = c(0)
 final_score_chart$times = c(0)
@@ -247,31 +260,30 @@ for (i in 1:nrow(final_score_chart))
 #print(average_final_list);
 
 #2.o) Number of student have a average final score
-print("2.o)")
+write_data("o. Danh sách sinh viên có điểm tổng kết bằng điểm trung bình:");
 score_match_average_list = subset(final_score_chart, final_score == average_final_score_all_student)
-print("Number of student have a average final score")
-print(nrow(score_match_average_list))
+write_data(nrow(score_match_average_list));
 
 #2.p) Median, Max, Min
-print("2.p)")
+write_data("p.")
+write_data("Trung vị điểm tổng kết:");
 Median_final_score = median(final_score_chart$final_score)
-print("Median average score");
-print(Median_final_score);
+write_data(Median_final_score);
 
+write_data("Cực đại mẫu điểm tổng kết:");
 Max_final_score = max(final_score_chart$final_score)
-print("Max average score");
-print(Max_final_score);
+write_data(Max_final_score);
 
+write_data("Cực tiểu mẫu điểm tổng kết:");
 Min_final_score = min(final_score_chart$final_score)
-print("Min average score");
-print(Min_final_score);
+write_data(Min_final_score);
 
 #2.q)Range, Variance, Standard Deviation
-print("2.q)")
+write_data("q. Độ phân tán dữ liệu điểm tổng kết:");
 range_final = range(final_score_chart$final_score)
-print("Range of average score");
 range_final_value = range_final[2] - range_final[1]
-print(range_final_value)
+write_data("Khoảng dữ liệu:");
+write_data(range_final_value);
 
 #Create result_chart save total_submit and numofstudent classified by final score
 result_chart = data.frame(
@@ -297,36 +309,35 @@ for(i in 1:nrow(final_score_chart))
 
 variance_final_score = var(final_score_chart$final_score)
 standard_deviation_final_score = sd(final_score_chart$final_score)
-print("Variance average score")
-print(variance_final_score)
-print("Standard Deviation average score")
-print(standard_deviation_final_score)
+write_data("Phương sai:");
+write_data(variance_final_score);
+write_data("Độ lệch chuẩn:");
+write_data(standard_deviation_final_score);
 
-#2.r)Skewness and Kurtosis of Average Score
-print("2.r)")
-print("Skewness Average Score")
-print(skewness(final_score_chart$final_score))
-print("Kurtosis Average Score")
-print(kurtosis(final_score_chart$final_score))
+#2.r)Skewness and Kurtosis of final score
+write_data("r.");
+write_data("Độ méo lệch của điểm tổng kết:")
+write_data(skewness(final_score_chart$final_score));
+write_data("Độ nhọn của điểm tổng kết:");
+write_data(kurtosis(final_score_chart$final_score));
 
 #2.s)Quantile 1st and 3rd
-print("2.s)")
-print("Quantile")
-quantile(final_score_chart$final_score, 0.25)
-quantile(final_score_chart$final_score, 0.75)
+write_data("s.");
+write_data("Tứ phân vị thứ nhất:");
+write_data(quantile(final_score_chart$final_score, 0.25));
+write_data("Tứ phân vị thứ ba:");
+write_data(quantile(final_score_chart$final_score, 0.75));
 
 #2.t)
-print("2.t)")
-print("result_chart")
+write_data("t. Số lượng sinh viên có điểm cao nhất hoặc cao nhì:");
 result_chart = result_chart[order(-result_chart$score), ,drop = FALSE]
-print(result_chart$times[1] + result_chart$times[2])
+write_data(result_chart$times[1] + result_chart$times[2]);
 
 #2.u)
-print("2.u)")
+write_data("u. Phổ theo số lần nộp của các sinh viên có điểm cao nhất hoặc cao nhì:");
 final_score_list_first = subset(final_score_chart, final_score == result_chart$score[1])
 final_score_list_second = subset(final_score_chart, final_score == result_chart$score[2])
 final_score_list_first_second = rbind(final_score_list_second, final_score_list_first)
-print(final_score_list_first_second)
 
 final_score_list_first_second_plot = data.frame(
   "times" = unique(final_score_list_first_second$times),
@@ -340,34 +351,38 @@ for(i in 1:nrow(final_score_list_first_second_plot))
       final_score_list_first_second_plot$frequency[i] = final_score_list_first_second_plot$frequency[i] + 1
     }
 }
-print(final_score_list_first_second_plot)
+write_data(final_score_list_first_second_plot);
 barplot(final_score_list_first_second_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = final_score_list_first_second_plot$times, main = "Pho so lan nop cua nhung hoc sinh co 1 diem tong ket cao nhat/nhi");
 
 #2.v)
-print("2.v)")
-print(result_chart)
-
+write_data("v. Số lượng sinh viên có điểm tổng kết cao thứ k:");
+names(result_chart) = c("k", "number of students");
+write_data(result_chart[c(1, 2), ]);
+barplot(result_chart$`number of students`,xlab = 'Phan diem tong ket', ylim = c(0,400),ylab = 'So sinh vien',names.arg = result_chart$k, main = "Tong so sinh vien theo phan diem cao thu k");
 
 #2.w)
-print("2.w)")
+write_data("w. Phổ theo số lân nộp của các sinh viên có điểm tổng kết cao thứ k:");
 result_chart$total_submit = c(0)
 for(i in 1:nrow(result_chart))
 {
   for(j in 1:nrow(final_score_chart))
   {
-    if(result_chart$score[i] == final_score_chart$final_score[j])
+    if(result_chart$k[i] == final_score_chart$final_score[j])
     {
       result_chart$total_submit[i] = result_chart$total_submit[i] + final_score_chart$times[j]
     }
   }
 }
 
-result_chart$score = c(1:nrow(result_chart))
-print(result_chart)
-print(sum(final_score_chart$times))
-barplot(result_chart$times,xlab = 'Phan diem tong ket', ylim = c(0,400),ylab = 'So sinh vien',names.arg = result_chart$score, main = "Tong so sinh vien theo phan diem cao thu k");
-barplot(result_chart$total_submit,ylim = c(0,400),xlab = 'Phan diem tong ket',ylab = 'So lan nop',names.arg = result_chart$score, main = "Tong so lan nop theo phan diem cao thu k");
+k = 0;
+for (score in final_score_chart %>% group_by(final_score) %>% summarise() %>% arrange(desc(final_score)) %>% pull(final_score)) {
+  print(score);
+  submit_k_plot = final_score_chart %>% filter(final_score == score) %>% group_by(times) %>% summarise("frequency" = n());
+  k = k + 1;
+  ggplot(data = submit_k_plot) + 
+    geom_col(mapping = aes(x = times, y = frequency));
+  ggsave(paste("Screenshot\\Q1-2\\q2w-", as.character(k), "-file1.png", sep = ""));
+}
 
-#1)Number of Students
-print(nrow(final_score_chart))
-
+result_chart$k = c(1:nrow(result_chart))
+write_data(result_chart);
