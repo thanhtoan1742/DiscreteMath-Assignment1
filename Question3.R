@@ -5,8 +5,14 @@ library(xlsx);
 library(readxl)
 library(e1071);
 
-file_number = 4;
+args = commandArgs(trailingOnly = TRUE);
+
+file_number = 1;
+if (length(args) > 0)
+  file_number = as.numeric(args[1]);
 tid = 6;
+if (length(args) > 1)
+  tid = as.numeric(args[2]);
 file_in = paste("Data\\", as.character(file_number), ".xlsx", sep = "");
 file_out = paste("Result\\", as.character(file_number), ".tsv", sep = "");
 
