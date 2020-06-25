@@ -5,7 +5,7 @@ library(e1071);
 
 #Read the Excel file
 data = data.frame();
-data = read.xlsx("E:/DiscreteMath-Assignment1-master/Data/1.xlsx", sheetIndex = 1);
+data = read.xlsx("Data/2.xlsx", sheetIndex = 1);
 namesList = c("Maso", "Tinhtrang", "BatDau", "HoanThanh", "Thoigian", "Diem/10,00", "Q. 1 /1,00", "Q. 2 /1,00", "Q. 3 /1,00", "Q. 4 /1,00", "Q. 5 /1,00", "Q. 6 /1,00", "Q. 7 /1,00", "Q. 8 /1,00", "Q. 9 /1,00", "Q. 10 /1,00");
 Encoding(namesList) = "UTF-8";
 names(data) = namesList;
@@ -60,11 +60,12 @@ write.csv(dtsdata,file='D.csv')
 print(dtsdata);
 
 #e
+jpeg("Screenshot\\q4e-file2.jpeg");
 lowtime <- ltsddata %>% count(Diem);
 lowtime <- lowtime %>% filter(lowtime$Diem >= min(NDtsdata$f,na.rm = TRUE));
 print(lowtime);
 barplot(lowtime$n,xlab = 'Diem cua cac sinh vien nop it nhat',ylab = 'So sinh vien', ylim = c(0,max(lowtime$n)+100),names.arg = lowtime$Diem);
-
+dev.off();
 #f
 hightsdata <- NDtsdata %>% filter(NDtsdata$f == max(NDtsdata$f,na.rm = TRUE));
 print(nrow(hightsdata));
