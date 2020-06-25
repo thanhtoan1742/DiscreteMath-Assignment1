@@ -4,7 +4,7 @@ library(tidyverse);
 library(readxl);
 library(xlsx);
 
-file_number = 1;
+file_number = 4;
 tid = 6;
 file_in = paste("Data\\", as.character(file_number), ".xlsx", sep = "");
 file_out = paste("Result\\", as.character(file_number), ".tsv", sep = "");

@@ -4,9 +4,10 @@ library(tidyverse);
 library(readxl);
 library(e1071);
 
-file_in = "Data\\1.xlsx";
-file_out = "Result\\1.tsv";
+file_number = 4;
 tid = 6;
+file_in = paste("Data\\", as.character(file_number), ".xlsx", sep = "");
+file_out = paste("Result\\", as.character(file_number), ".tsv", sep = "");
 
 reset_file_out = function() {
   write_tsv(as_tibble(paste("tid:", as.character(tid))), path = file_out, append = FALSE, col_names = FALSE);
@@ -108,7 +109,10 @@ for(i in 1:nrow(lowest_list_plot))
   }
 }
 write_data(lowest_list_plot);
-barplot(lowest_list_plot$frequency,ylim = c(0,10),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = lowest_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem thap nhat");
+png("Screenshot\\q2d-file2.png")
+# barplot(lowest_list_plot$frequency,ylim = c(0,10),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = lowest_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem thap nhat");
+dev.off();
+
 
 #2.e) Get the lowest student final score
 write_data("e. Điểm tổng kết thấp nhất:");
@@ -174,7 +178,9 @@ for(i in 1:nrow(lowest_final_list_plot))
     }
 }
 write_data(lowest_final_list_plot);
-barplot(lowest_final_list_plot$frequency,ylim = c(0,10),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = lowest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem tong ket thap nhat");
+png("Screenshot\\q2g-file2.png")
+# barplot(lowest_final_list_plot$frequency,ylim = c(0,10),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = lowest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem tong ket thap nhat");
+dev.off();
 
 #2.h) Find Highest_score
 write_data("h. Điểm cao nhất:")
@@ -217,7 +223,9 @@ for(i in 1:nrow(highest_final_list_plot))
     }
 }
 write_data(highest_final_list_plot);
-barplot(highest_final_list_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = highest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem cao nhat");
+png("Screenshot\\q2j-file2.png")
+# barplot(highest_final_list_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = highest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co 1 diem cao nhat");
+dev.off();
 
 #2.k)
 write_data("k. Điểm tổng kết cao nhất:")
@@ -231,7 +239,7 @@ write_data(highest_chart$stdid);
 #2.m)
 write_data("m. Phổ theo số lần nộp của các sinh viên có điểm tổng kết cao nhất:");
 write_data(highest_final_list);
-barplot(highest_final_list_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = highest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co diem tong ket cao nhat");
+# barplot(highest_final_list_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = highest_final_list_plot$times, main = "Pho tong so lan nop cua nhung hoc sinh co diem tong ket cao nhat");
 
 #2.n) Caculate average final_score of all student
 write_data("n. Điêm số tổng kết trung bình:");
@@ -352,13 +360,13 @@ for(i in 1:nrow(final_score_list_first_second_plot))
     }
 }
 write_data(final_score_list_first_second_plot);
-barplot(final_score_list_first_second_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = final_score_list_first_second_plot$times, main = "Pho so lan nop cua nhung hoc sinh co 1 diem tong ket cao nhat/nhi");
+# barplot(final_score_list_first_second_plot$frequency,ylim = c(0,300),xlab = 'so lan nop',ylab = 'tan so xuat hien',names.arg = final_score_list_first_second_plot$times, main = "Pho so lan nop cua nhung hoc sinh co 1 diem tong ket cao nhat/nhi");
 
 #2.v)
 write_data("v. Số lượng sinh viên có điểm tổng kết cao thứ k:");
 names(result_chart) = c("k", "number of students");
 write_data(result_chart[c(1, 2), ]);
-barplot(result_chart$`number of students`,xlab = 'Phan diem tong ket', ylim = c(0,400),ylab = 'So sinh vien',names.arg = result_chart$k, main = "Tong so sinh vien theo phan diem cao thu k");
+# barplot(result_chart$`number of students`,xlab = 'Phan diem tong ket', ylim = c(0,400),ylab = 'So sinh vien',names.arg = result_chart$k, main = "Tong so sinh vien theo phan diem cao thu k");
 
 #2.w)
 write_data("w. Phổ theo số lân nộp của các sinh viên có điểm tổng kết cao thứ k:");
@@ -381,7 +389,7 @@ for (score in final_score_chart %>% group_by(final_score) %>% summarise() %>% ar
   k = k + 1;
   ggplot(data = submit_k_plot) + 
     geom_col(mapping = aes(x = times, y = frequency));
-  ggsave(paste("Screenshot\\Q1-2\\q2w-", as.character(k), "-file1.png", sep = ""));
+  ggsave(paste("Screenshot\\q2w-", as.character(k), "-file4.png", sep = ""));
 }
 
 result_chart$k = c(1:nrow(result_chart))

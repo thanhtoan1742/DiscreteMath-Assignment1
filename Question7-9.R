@@ -1,17 +1,36 @@
-library(dplyr)
-library(xlsx)
-library(ggplot2)
+options(encoding = "UTF-8");
+library(utf8);
+library(tidyverse);
+library(readxl);
+library(xlsx);
 
+file_number = 4;
+tid = 6;
+file_in = paste("Data\\", as.character(file_number), ".xlsx", sep = "");
+file_out = paste("Result\\", as.character(file_number), ".tsv", sep = "");
 
-#Read the Excel file
-thienan = data.frame()
-thienan = read.xlsx("/Users/Tran Dinh Gia Hai/Desktop/CTRR/1.xlsx", sheetIndex = 1)
+to_number = function(a) {
+    res = as.numeric(sub(",", ".", a, fixed = TRUE));
+    return(res);
+}
+
+write_data = function(data) {
+  write_data_col_names = TRUE;
+  if (is.character(data) | is.numeric(data) | is.vector(data))
+    write_data_col_names = FALSE;
+
+  if (is.character(data))
+    Encoding(data) = "UTF-8";
+  data <- as_tibble(data);
+  write_tsv(data, path = file_out, append = TRUE, col_names = write_data_col_names);
+}
+
+#Read the Excel file    
+thienan = read_excel(file_in, sheet = 1)
 namesList = c("Ma so ID", "Tinh trang", "Da bat dau vao luc", "Da hoan thanh", "Thoi gian thuc hien", "Diem/10,00", "Q. 1 /1,00", "Q. 2 /1,00", "Q. 3 /1,00", "Q. 4 /1,00", "Q. 5 /1,00", "Q. 6 /1,00", "Q. 7 /1,00", "Q. 8 /1,00", "Q. 9 /1,00", "Q. 10 /1,00")
 Encoding(namesList) = "UTF-8"
 names(thienan) = namesList
 row.names(thienan) = NULL
-Encoding(thienan[, 2]) = "UTF-8"
-Encoding(thienan[, 5]) = "UTF-8"
 
 
 #Refine data from Excel file
@@ -20,22 +39,24 @@ thienan$'Diem/10,00' <- suppressWarnings(as.numeric(sub(",", ".", thienan$'Diem/
 
 
 #Question 7
+write_data("Câu 7");
 pta1 <- thienan
 pta1 <- subset(pta1, pta1$'Da bat dau vao luc' >= "2020-04-10 00:00:00")
 pta1 <- pta1[!duplicated(pta1$'Ma so ID'),]
 pta1 %>% ggplot(aes(x = pta1$'Diem/10,00')) + geom_bar(width = 0.2, fill = "#FF6666") + xlab("Mark") + ylab("Count") + ggtitle("Mark Range Q7")
-print("So hoc sinh hoc doi pho la: ") 
-print(nrow(pta1))
+write_data("So hoc sinh hoc doi pho la: ") 
+write_data(nrow(pta1))
 
 
 #Question 9
+write_data("Câu 9");
 pta2 <- thienan
 pta2 <- pta2 %>% group_by(pta2$'Ma so ID') %>% arrange(pta2$'Da bat dau vao luc') %>% slice(1:1)
 pta2 <- subset(pta2, pta2$'Diem/10,00' >= 9 & pta2$'Ma so ID' > 1)
 pta2 <- pta2[!duplicated(pta2$'Ma so ID'),]
 pta2 %>% ggplot(aes(x = pta2$'Diem/10,00')) + geom_bar(width = 0.2, fill = "#FF6666") + xlab("Mark") + ylab("Count") + ggtitle("Mark Range Q9")
-print("So hoc sinh thong minh la: ") 
-print(nrow(pta2))
+write_data("So hoc sinh thong minh la: ") 
+write_data(nrow(pta2))
 
 #Refine data: Chuẩn hóa định dạng ngày tháng và thời gian để tiện cho tính toán về sau. Chuẩn hóa điểm thành dạng số
 #Q7: 1. Đưa dữ liệu trong data frame thienan vào pta1 để không làm ảnh hưởng dữ liệu gốc khi tính toán
